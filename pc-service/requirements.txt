@@ -27,6 +27,9 @@ keyboard==0.13.5 ; sys_platform == "win32"
 # System tray UI
 pystray==0.19.5
 
+# First-run setup wizard (Tkinter modern theme)
+customtkinter==5.2.2
+
 # Supabase Python client + realtime
 supabase==2.5.0
 realtime==1.0.6

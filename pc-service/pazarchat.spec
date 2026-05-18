@@ -14,7 +14,13 @@ ilk başlatma 20-30sn'ye çıkıyor (her açılışta TEMP'e açıyor). Onedir i
 Kullanıcı klasörü zip olarak alır, istediği yere açar.
 """
 
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules
+
 block_cipher = None
+
+
+# customtkinter'ın asset dosyalarını (theme JSON'ları, fontlar) bundle'a dahil et
+_ctk_datas = collect_data_files('customtkinter')
 
 
 a = Analysis(
@@ -24,6 +30,8 @@ a = Analysis(
     datas=[
         # .env.example template'i kullanıcıya örnek olarak gitsin
         ('.env.example', '.'),
+        # customtkinter theme/asset dosyaları
+        *_ctk_datas,
     ],
     hiddenimports=[
         # PyInstaller'ın otomatik tespit edemediği import'lar
@@ -52,6 +60,11 @@ a = Analysis(
         # pystray + tray icon
         'pystray._win32',
         'pystray._base',
+        # First-run setup GUI (Tkinter + customtkinter)
+        'tkinter',
+        'tkinter.messagebox',
+        'tkinter.ttk',
+        'customtkinter',
         # supabase/postgrest/httpx
         'supabase',
         'supabase._sync',

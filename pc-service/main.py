@@ -13,16 +13,75 @@ Shutdown:
   - Tray "Çıkış" → _shutdown_event set → tüm worker'lar loop'tan çıkar
   - Ctrl+C (SIGINT) → aynı event set
   - Fatal lisans hatası → on_license_error → tray hata mesajı + shutdown
+
+İlk Çalıştırma (Setup Wizard):
+  - Eğer .env eksikse veya kritik alanlar boşsa setup_gui açılır
+  - Kullanıcı formu doldurur → .env oluşturulur → uygulamayı yeniden başlatır
+  - Bu kontrol config import edilmeden ÖNCE yapılır (yoksa config eksik .env ile patlar)
 """
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+
+def _needs_setup_wizard(env_path: Path) -> bool:
+    """.env yok veya kritik alanlar boş ise True döner.
+
+    Bu fonksiyon config.py import edilmeden önce çağrılır — eksik .env ile
+    config import'u ConfigError fırlatır ve setup wizard hiç görünmez.
+    """
+    if not env_path.exists():
+        return True
+    try:
+        content = env_path.read_text(encoding="utf-8")
+    except Exception:
+        return True
+    required = ("PAZARCHAT_API_KEY", "KO_CHARACTER_NAME", "SUPABASE_URL")
+    for key in required:
+        found = False
+        for line in content.splitlines():
+            stripped = line.strip()
+            if stripped.startswith(f"{key}="):
+                value = stripped[len(key) + 1:].strip()
+                if value:
+                    found = True
+                break
+        if not found:
+            return True
+    return False
+
+
+# Sadece __main__ olarak çalıştırıldığında setup check yapılır
+# (import time'da config-eksik testler için problem yaratmasın).
+if __name__ == "__main__":
+    _env_path = Path(__file__).resolve().parent / ".env"
+    if _needs_setup_wizard(_env_path):
+        try:
+            from setup_gui import run_setup_if_needed
+            _success = run_setup_if_needed(_env_path)
+            if _success:
+                sys.stderr.write(
+                    "\n✅ Kurulum tamamlandı. PazarChat'i yeniden başlatın.\n"
+                )
+                sys.exit(0)
+            else:
+                sys.stderr.write("\n❌ Kurulum iptal edildi.\n")
+                sys.exit(1)
+        except ImportError as e:
+            sys.stderr.write(
+                f"\n[FATAL] Setup wizard yüklenemedi: {e}\n"
+                "Manuel kurulum için .env dosyasını .env.example'dan kopyalayıp doldur.\n"
+            )
+            sys.exit(2)
+
+
+# Setup OK ya da import time — diğer import'lar güvenli
 import logging
 import signal
-import sys
 import threading
 from datetime import datetime
-from pathlib import Path
 from typing import Optional
 
 from clipboard_handler import ClipboardError, ClipboardHandler
@@ -427,6 +486,7 @@ class PazarChatService:
 # -----------------------------------------------------------------------------
 
 def main() -> int:
+    """Setup wizard zaten module-level'da yapıldı — buraya gelmek = .env tamam."""
     setup_logging(settings.log_level, settings.log_file)
     service = PazarChatService()
     return service.start()
