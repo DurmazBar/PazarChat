@@ -48,7 +48,9 @@ htmlcov/
 # PyInstaller (PC servisi .exe build çıktıları)
 pc-service/build/
 pc-service/dist/
+# Auto-generated .spec dosyalarını ignore et, ama manuel hazırladığımız config'i tut
 pc-service/*.spec
+!pc-service/pazarchat.spec
 
 # Telegram bot local DB (dev için sqlite kullanılırsa)
 telegram-bot/*.db

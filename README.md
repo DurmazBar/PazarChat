@@ -38,7 +38,24 @@ PC'de yakalanan PM'ler Telegram'a anlık bildirim olarak gelir, kullanıcı tele
 
 ## 🚀 Hızlı Başlangıç (Beta Kullanıcısı)
 
-### Windows PC için (KO + PC servisi)
+### ⭐ Önerilen Yöntem — Hazır `.exe` İndir
+
+> Python kurmadan, tek bir zip ile başla.
+
+1. **[Releases sayfasına git](https://github.com/DurmazBar/PazarChat/releases/latest)**
+2. `PazarChat-windows.zip` dosyasını indir
+3. Bir klasöre çıkar (örn. `C:\PazarChat`)
+4. Klasör içindeki `.env.example`'ı `.env` olarak kopyala
+5. Notepad ile `.env` aç:
+   - `PAZARCHAT_API_KEY=pzc_...` (Telegram bot'tan `/durum` ile al)
+   - `KO_CHARACTER_NAME=...` (KO karakter adın)
+6. `PazarChat.exe`'yi çift tıkla
+7. KO aç → pazar kur → Telegram'a bildirim gelmeye başlar
+
+⚠ **Microsoft Defender uyarısı normal** — imzasız .exe için "Tanınmayan uygulama" der.
+"Diğer bilgi" → "Yine de çalıştır" ile geç.
+
+### Manuel Yöntem — Geliştiriciler İçin
 
 > 📘 **Detaylı rehber:** [WINDOWS_SETUP.md](WINDOWS_SETUP.md)
 
@@ -61,7 +78,7 @@ notepad .env       # PAZARCHAT_API_KEY ve KO_CHARACTER_NAME doldur
 python main.py
 ```
 
-**Önkoşullar:**
+**Önkoşullar (manuel yöntem için):**
 - Windows 10/11 (64-bit)
 - Python 3.12 ([python.org](https://www.python.org/downloads/release/python-3128/) — "Add to PATH" işaretli olmalı)
 - Git for Windows ([git-scm.com](https://git-scm.com/download/win))
@@ -188,6 +205,29 @@ PazarChat/
 ---
 
 ## 🛠 Geliştirici Notları
+
+### `.exe` Build Almak
+
+İki yol var:
+
+**1. GitHub Actions (önerilen):**
+```bash
+# Yeni release yayınla — Actions otomatik build alır, Release oluşturur
+git tag v0.1.0-beta
+git push --tags
+```
+Veya manuel: GitHub → Actions → **Build PC Service (Windows)** → Run workflow
+
+Build ~10-15 dk sürer. Sonuç: [Releases](https://github.com/DurmazBar/PazarChat/releases) sayfasında `PazarChat-windows.zip`.
+
+**2. Yerel build (Windows'ta):**
+```powershell
+cd pc-service
+.\venv\Scripts\Activate.ps1
+pip install pyinstaller==6.10.0
+pyinstaller --clean pazarchat.spec
+# Çıktı: dist\PazarChat\PazarChat.exe
+```
 
 ### Supabase migration uygulama (yeni proje için)
 
