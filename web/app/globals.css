@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ----------------------------------------------------------------------------
+ * Tasarım sistemi — CSS custom properties
+ * Karanlık tema öncelikli; light mode opsiyonel (sonra eklenir).
+ * -------------------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+  --background: 2 6 23;             /* surface-950 */
+  --foreground: 248 250 252;        /* surface-50 */
+  --muted: 100 116 139;             /* slate-500 */
+  --border: 30 41 59;               /* surface-800 */
+  --primary-glow: 16 185 129;       /* primary-500 */
+  --accent-glow: 245 158 11;        /* accent-500 */
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Dekoratif radial gradient — landing hero için */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(var(--border) / 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--border) / 0.4) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, black 40%, transparent 100%);
+          mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, black 40%, transparent 100%);
+}
+
+/* Selection rengini brand'le hizala */
+::selection {
+  background-color: rgb(var(--primary-glow) / 0.35);
+  color: rgb(var(--foreground));
+}

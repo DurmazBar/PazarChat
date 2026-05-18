@@ -1,0 +1,45 @@
+# =============================================================================
+# PazarChat — PC Service Dependencies
+# =============================================================================
+# Python 3.11+ önerilir.
+# Windows'ta kurulum: python -m venv venv && venv\Scripts\activate && pip install -r requirements.txt
+# =============================================================================
+
+# Ekran yakalama (Windows + cross-platform)
+mss==9.0.1
+
+# OCR (Türkçe destekli, GPU opsiyonel)
+easyocr==1.7.1
+
+# Görsel işleme (EasyOCR'ın bağımlılığı, açıkça pinlenir)
+Pillow==10.4.0
+numpy==1.26.4
+
+# Windows API (pencere bulma, foreground vs.)
+pywin32==306 ; sys_platform == "win32"
+
+# Pano (clipboard) — cross-platform ama Windows'ta optimal
+pyperclip==1.9.0
+
+# Global hotkey (F8 ile pano → KO yapıştırma) — Windows-only
+keyboard==0.13.5 ; sys_platform == "win32"
+
+# System tray UI
+pystray==0.19.5
+
+# Supabase Python client + realtime
+supabase==2.5.0
+realtime==1.0.6
+postgrest==0.16.8
+
+# HTTP istekleri (heartbeat, license check)
+httpx==0.27.0
+
+# Env file okuma
+python-dotenv==1.0.1
+
+# Loglama (rich daha güzel ekran çıktısı verir)
+rich==13.7.1
+
+# Async event loop (mevcut Python async desteği için zaten gerek değil ama clarity için)
+# nest-asyncio==1.6.0  # gerekirse açılır

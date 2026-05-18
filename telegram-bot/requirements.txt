@@ -1,0 +1,26 @@
+# =============================================================================
+# PazarChat — Telegram Bot Dependencies
+# =============================================================================
+# Python 3.11+ önerilir.
+# Kurulum: python -m venv venv && source venv/bin/activate && pip install -r requirements.txt
+# Mac/Linux/Windows hepsinde çalışır (bot sunucuda Linux'ta deploy edilecek).
+# =============================================================================
+
+# Telegram Bot framework — async, modern, FSM destekli
+aiogram==3.13.1
+
+# Supabase Python client + realtime (gerekirse)
+supabase==2.5.0
+postgrest==0.16.8
+
+# HTTP istekleri (gerekirse direkt REST)
+httpx==0.27.0
+
+# Env file okuma
+python-dotenv==1.0.1
+
+# Tarih/saat işleri (timezone, parsing)
+python-dateutil==2.9.0
+
+# Loglama (renkli çıktı)
+rich==13.7.1

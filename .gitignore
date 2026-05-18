@@ -1,0 +1,117 @@
+# =============================================================================
+# PazarChat — Root .gitignore
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Secrets / API Keys — ASLA COMMIT EDILMEMELI
+# -----------------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+.env.production
+**/.env
+!**/.env.example
+
+# Claude Code MCP config (Supabase PAT içerir)
+.mcp.json
+!.mcp.json.example
+
+# Diğer secret formatları
+*.pem
+*.key
+*.p12
+*.pfx
+service-account*.json
+firebase-adminsdk-*.json
+
+# -----------------------------------------------------------------------------
+# Python (pc-service, telegram-bot)
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv/
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# PyInstaller (PC servisi .exe build çıktıları)
+pc-service/build/
+pc-service/dist/
+pc-service/*.spec
+
+# Telegram bot local DB (dev için sqlite kullanılırsa)
+telegram-bot/*.db
+telegram-bot/*.sqlite*
+
+# -----------------------------------------------------------------------------
+# Node.js / Next.js (web)
+# -----------------------------------------------------------------------------
+web/node_modules/
+web/.next/
+web/out/
+web/build/
+web/dist/
+web/.vercel/
+web/.turbo/
+web/coverage/
+web/.env*.local
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
+web/.pnpm-debug.log*
+web/.npm/
+
+# Next.js cache
+web/.next/cache/
+
+# TypeScript
+web/*.tsbuildinfo
+web/next-env.d.ts
+
+# -----------------------------------------------------------------------------
+# Supabase
+# -----------------------------------------------------------------------------
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+
+# -----------------------------------------------------------------------------
+# IDE / Editor
+# -----------------------------------------------------------------------------
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+
+# -----------------------------------------------------------------------------
+# OS
+# -----------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# -----------------------------------------------------------------------------
+# Logs
+# -----------------------------------------------------------------------------
+*.log
+logs/
+pc-service/logs/
+telegram-bot/logs/
