@@ -83,14 +83,14 @@ class SetupWizard:
 
         self.root = ctk.CTk()
         self.root.title("PazarChat — Kurulum")
-        self.root.geometry("560x720")
+        self.root.geometry("620x900")
         self.root.resizable(False, False)
 
         # Pencere ortaya
         self.root.update_idletasks()
-        x = (self.root.winfo_screenwidth() // 2) - 280
-        y = (self.root.winfo_screenheight() // 2) - 360
-        self.root.geometry(f"560x720+{x}+{y}")
+        x = (self.root.winfo_screenwidth() // 2) - 310
+        y = (self.root.winfo_screenheight() // 2) - 450
+        self.root.geometry(f"620x900+{x}+{y}")
 
         # X butonuna basınca çıkış (sırasıyla setup tamamlanmadı sayılır)
         self.root.protocol("WM_DELETE_WINDOW", self._on_cancel)
@@ -165,35 +165,54 @@ class SetupWizard:
         # ---- Paste Mode ----
         self._field_label(main, "⚙  Cevap Gönderim Modu")
 
-        mode_frame = ctk.CTkFrame(main, fg_color="transparent")
-        mode_frame.pack(fill="x", pady=(0, 6))
-
-        ctk.CTkRadioButton(
-            mode_frame,
-            text="Manuel — sadece pano (Ctrl+V kullanırsın)",
-            variable=self.paste_mode_var,
+        # Her mod için ayrı kart (radio + açıklama + risk badge)
+        self._mode_card(
+            main,
             value="manual",
-        ).pack(anchor="w", pady=2)
-        ctk.CTkRadioButton(
-            mode_frame,
-            text="Hibrit — F8 hotkey (önerilen)",
-            variable=self.paste_mode_var,
+            title="Manuel",
+            badge="🟢 Düşük risk",
+            badge_color="#16a34a",
+            description=(
+                "Telegram'da yazdığın cevap PC'nin panosuna kopyalanır.\n"
+                "Sen KO'ya geçip chat input'a Ctrl+V ile yapıştırır, Enter'la gönderirsin.\n"
+                "Hiçbir tuş simülasyonu yoktur — KO TOS açısından en savunulabilir mod."
+            ),
+        )
+
+        self._mode_card(
+            main,
             value="hybrid",
-        ).pack(anchor="w", pady=2)
-        ctk.CTkRadioButton(
-            mode_frame,
-            text="Otomatik — ⚠ yüksek TOS riski",
-            variable=self.paste_mode_var,
+            title="Hibrit (F8 hotkey)",
+            badge="🟡 Orta risk · Önerilen",
+            badge_color="#eab308",
+            description=(
+                "Cevap pano'ya kopyalanır + F8 tuşu küresel olarak dinlenir.\n"
+                "Sen KO penceresinde F8'e basınca otomatik yapıştırma + Enter olur.\n"
+                "GÜVENLİK: F8 sadece KO aktif (foreground) pencereyse çalışır.\n"
+                "Discord/Chrome aktifken F8 → hiçbir şey olmaz (yanlış yere yazma yok)."
+            ),
+        )
+
+        self._mode_card(
+            main,
             value="auto",
-            text_color="#ef4444",
-        ).pack(anchor="w", pady=2)
+            title="Otomatik",
+            badge="🔴 Yüksek risk",
+            badge_color="#dc2626",
+            description=(
+                "Cevap geldiği anda PC servisi KO penceresini otomatik öne alır ve\n"
+                "yapıştırma + Enter gönderir. Sen başka pencerede olsan bile çalışır.\n"
+                "⚠ Knight Online TOS'unda 'otomasyon aracı' olarak değerlendirilebilir.\n"
+                "Banlanma riski mevcuttur, kullanım sorumluluğu sana aittir."
+            ),
+        )
 
         ctk.CTkLabel(
             main,
-            text="Detay: Kullanım Koşulları §3.1",
+            text="Detaylı yasal açıklama: Kullanım Koşulları §3.1",
             font=ctk.CTkFont(size=10),
             text_color="gray50",
-        ).pack(anchor="w", pady=(0, 16))
+        ).pack(anchor="w", pady=(4, 16))
 
         # ---- Kullanım Koşulları ----
         terms_check = ctk.CTkCheckBox(
@@ -240,6 +259,50 @@ class SetupWizard:
             font=ctk.CTkFont(size=13, weight="bold"),
             anchor="w",
         ).pack(fill="x", pady=(0, 4))
+
+    def _mode_card(
+        self,
+        parent,
+        value: str,
+        title: str,
+        badge: str,
+        badge_color: str,
+        description: str,
+    ):
+        """Paste mode için detaylı kart: radio + başlık + risk badge + açıklama."""
+        card = ctk.CTkFrame(parent, fg_color="gray20", corner_radius=8)
+        card.pack(fill="x", pady=4)
+
+        # Üst satır: radio + başlık + risk badge
+        header = ctk.CTkFrame(card, fg_color="transparent")
+        header.pack(fill="x", padx=12, pady=(10, 4))
+
+        radio = ctk.CTkRadioButton(
+            header,
+            text=title,
+            variable=self.paste_mode_var,
+            value=value,
+            font=ctk.CTkFont(size=13, weight="bold"),
+        )
+        radio.pack(side="left")
+
+        badge_label = ctk.CTkLabel(
+            header,
+            text=badge,
+            font=ctk.CTkFont(size=10, weight="bold"),
+            text_color=badge_color,
+        )
+        badge_label.pack(side="right")
+
+        # Alt satır: açıklama
+        ctk.CTkLabel(
+            card,
+            text=description,
+            font=ctk.CTkFont(size=11),
+            text_color="gray70",
+            justify="left",
+            anchor="w",
+        ).pack(fill="x", padx=12, pady=(0, 10))
 
     # ------------------------------------------------------------------
     # Buton callback'leri
